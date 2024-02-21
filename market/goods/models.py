@@ -38,7 +38,7 @@ class Products(models.Model):
         return f"{self.id:05}"
 
     def sell_price(self):  # Рассчитываем скидку, если ее нет возвращает цену.
-        if self.price:
+        if self.discount:
             return round(self.price - self.price * self.discount/100, 2)
 
         return self.price
