@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from goods.models import Products
 
@@ -5,7 +6,7 @@ from goods.models import Products
 # Create your views here.
 
 
-def catalog(request, category_slug):
+def catalog(request, category_slug, page=1):
     """Выводим товары по категориям, если в категории нет товаров,
     то выводится "Ничего нет" """
 
@@ -17,15 +18,19 @@ def catalog(request, category_slug):
         if not goods.exists():
             return render(request, 'goods/index.html', {"content": "Ничего нет"})
 
+    paginator = Paginator(goods, 3)
+    current_page = paginator.page(page)
+
     context = {
         'title': 'Каталог',
-        'goods': goods,
+        'goods': current_page,
+        'slug_url': category_slug,
     }
     return render(request, 'goods/catalog.html', context)
 
 
 def product(request, product_slug):
-    """ Достаем из бд id каждого товара"""
+    """ Достаем из бд slug каждого товара"""
     product = Products.objects.get(slug=product_slug)
 
     context = {
