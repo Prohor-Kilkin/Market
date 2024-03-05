@@ -11,12 +11,13 @@
                 Фильтры
             </button>
 
-            <form action="{% url 'catalog:index' slug_url %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
+            <form action="{% if request.GET.q %}{% url 'catalog:search' %}{% else %}{% url 'catalog:index' slug_url %}{% endif %}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
                 <div class="form-check text-white mx-3">
                     <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on"
                            {% if request.GET.on_sale == 'on' %} checked {% endif %}>
-
-<!--                    <input type="hidden" name="q" value="request.GET.q">-->
+                    {% if request.GET.q %}
+                        <input type="hidden" name="q" value="{{request.GET.q}}">
+                    {% endif %}
                     <label class="form-check-label" for="flexCheckDefault">
                         Товары по акции
                     </label>
@@ -58,9 +59,19 @@
                 <div class="card-body">
 <!--                    /*namespace(url patterns)/namespace(приложения goods)/slug товара*/-->
                     <a href="{% url 'catalog:product' product.slug  %}">
-                        <p class="card-title">{{ product.name }}</p>
+                        <p class="card-title">
+                            {% autoescape off %}
+                                {% if product.headline %}{{product.headline}}
+                                {% else %}{{ product.name }}{% endif %}
+                            {% endautoescape off %}
+                        </p>
                     </a>
-                    <p class="card-text ">{{ product.description|truncatechars:50 }}</p>
+                    <p class="card-text ">
+                        {% autoescape off %}
+                            {% if product.bodyline %}{{product.bodyline|truncatechars:80}}
+                            {% else %}{{ product.description|truncatechars:80 }}{% endif %}
+                        {% endautoescape off %}
+                        </p>
                     <p class="product_id">id: {{ product.display_id }}</p>
                     <div class="d-flex justify-content-between">
                         {% if product.discount %}

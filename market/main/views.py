@@ -6,7 +6,7 @@ def index(request):
 
     context = {
         'title': 'Главная',
-        'content': 'Магазин мебели HOME',
+        'content': 'Магазин часов "THE BEST"',
     }
     return render(request, 'main/index.html', context)
 
