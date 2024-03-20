@@ -20,11 +20,12 @@ def login(request):
                 return HttpResponseRedirect(reverse('main:index'))
     else:
         form = UserLoginForm()
-        context = {
-            'title': 'Авторизация',
-            'form': form
-        }
-        return render(request, 'users/login.html', context)
+
+    context = {
+        'title': 'Авторизация',
+        'form': form
+    }
+    return render(request, 'users/login.html', context)
 
 
 def registration(request):
